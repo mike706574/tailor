@@ -12,7 +12,9 @@
                               (re-matches #"^[a-zA-Z0-9]+$" %))))
 
 (def blank? str/blank?)
+
 (def not-blank? (complement blank?))
 
 (def double? (comp boolean parsers/double))
+
 (def long? (comp boolean parsers/long))

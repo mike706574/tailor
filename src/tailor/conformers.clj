@@ -18,3 +18,8 @@
 (def to-trimmed?
   "Conformer for trimming a string."
   (s/conformer str/trim))
+
+(defn to-date?
+  [pattern]
+  (let [parse (parsers/date pattern)]
+    (s/conformer #(or (parse %) ::s/invalid))))

@@ -18,3 +18,9 @@
 (def double? (comp boolean parsers/double))
 
 (def long? (comp boolean parsers/long))
+
+(defn date?
+  ([pattern]
+   (parsers/date pattern))
+  ([pattern x]
+   (parsers/date pattern x)))

@@ -23,3 +23,5 @@
    (parsers/date pattern))
   ([pattern x]
    (parsers/date pattern x)))
+
+(def basic-iso-date? (date? "yyyyMMdd"))

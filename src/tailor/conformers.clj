@@ -21,5 +21,6 @@
 
 (defn to-date?
   [pattern]
-  (let [parse (parsers/date pattern)]
-    (s/conformer #(or (parse %) ::s/invalid))))
+  (let [parse (parsers/date pattern)
+        to-date? (fn [x] (or (parse x) ::s/invalid))]
+    (s/conformer to-date?)))

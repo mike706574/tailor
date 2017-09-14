@@ -27,7 +27,7 @@
     (instance? java.time.LocalDate x) x
     (string? x) (try
                   (java.time.LocalDate/parse x formatter)
-                  (catch java.text.ParseException ex nil))))
+                  (catch java.time.format.DateTimeParseException ex nil))))
 
 (defn date
   "Coerces strings to java.time.LocalDate instances using the given pattern. Returns a parser when no value is given."

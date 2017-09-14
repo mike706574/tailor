@@ -1,6 +1,5 @@
 (ns tailor.predicates
-  (:require [clj-time.format :as time-format]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [tailor.parsers :as parsers]))
 
 (def alpha-trimmed? #(boolean (and (string? %)

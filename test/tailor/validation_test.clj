@@ -1,14 +1,15 @@
 (ns tailor.validation-test
+  (:refer-clojure :exclude [double?])
   (:require [clojure.spec.alpha :as s]
             [clojure.test :refer [deftest is testing]]
             [tailor.validation :as validation]
             [tailor.parsers :as parsers]
-            [tailor.conformers :refer :all]
+            [tailor.specs :refer :all]
             [tailor.predicates :refer :all]))
 
-(s/def ::id (s/and string? not-blank? to-trimmed?))
-(s/def ::rate (s/and double? to-double?))
-(s/def ::date (s/and date? (to-date? "yyyyMMdd")))
+(s/def ::id (s/and string? populated? to-trimmed))
+(s/def ::rate (s/and double? to-double))
+(s/def ::date (s/and date? (to-date "yyyyMMdd")))
 
 (s/def ::item (s/keys :req [::id ::rate ::date]))
 
@@ -26,10 +27,10 @@
   (is (= {:tailor.validation-test/id " ",
           :tailor.validation-test/rate "x",
           :tailor.validation-test/date "01121995",
-          :data-error
-          [{:pred "not-blank?", :val " ", :in :tailor.validation-test/id}
+          :data-errors
+          [{:pred "populated?", :val " ", :in :tailor.validation-test/id}
            {:pred "double?", :val "x", :in :tailor.validation-test/rate}
-           {:pred "to-date?",
+           {:pred "to-date",
             :val "01121995",
             :in :tailor.validation-test/date}]}
          (validation/validate-item ::item {::id " "

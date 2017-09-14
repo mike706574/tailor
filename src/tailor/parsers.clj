@@ -35,3 +35,10 @@
    (partial parse-date (java.time.format.DateTimeFormatter/ofPattern pattern)))
   ([pattern x]
    (parse-date (java.time.format.DateTimeFormatter/ofPattern pattern) x)))
+
+(def ^:private basic-iso-formatter java.time.format.DateTimeFormatter/BASIC_ISO_DATE)
+
+(defn basic-iso-date
+  "Coerces strings to java.time.LocalDate instances using the basic ISO date pattern."
+  [x]
+  (parse-date java.time.format.DateTimeFormatter/BASIC_ISO_DATE x))

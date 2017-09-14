@@ -1,4 +1,5 @@
 (ns tailor.predicates
+  (:refer-clojure :exclude [double?])
   (:require [clojure.string :as str]
             [tailor.parsers :as parsers]))
 
@@ -20,8 +21,8 @@
 
 (defn date?
   ([pattern]
-   (parsers/date pattern))
+   (comp boolean (parsers/date pattern)))
   ([pattern x]
-   (parsers/date pattern x)))
+   (boolean (parsers/date pattern x))))
 
-(def basic-iso-date? (date? "yyyyMMdd"))
+(def basic-iso-date? (comp boolean parsers/basic-iso-date))

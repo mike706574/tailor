@@ -11,7 +11,7 @@
                                   pred)]
                         (name sym))))))
 
-(defn item-error [spec item]
+(defn item-errors [spec item]
   (let [problems (::s/problems (s/explain-data spec item))]
     (mapv item-problem problems)))
 
@@ -21,7 +21,7 @@
     item
     (let [conformed (s/conform spec item)]
       (if (= conformed ::s/invalid)
-        (assoc item :data-error (item-error spec item))
+        (assoc item :data-errors (item-errors spec item))
         conformed))))
 
 (defn validate

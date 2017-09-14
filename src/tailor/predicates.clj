@@ -12,7 +12,7 @@
 
 (def blank? str/blank?)
 
-(def not-blank? (complement blank?))
+(def populated? (complement blank?))
 
 (def double? (comp boolean parsers/double))
 

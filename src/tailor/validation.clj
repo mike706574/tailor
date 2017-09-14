@@ -19,5 +19,5 @@
      data
      (let [conformed (s/conform spec data)]
        (if (= conformed ::s/invalid)
-         (assoc data :data-error (data-error data))
+         (assoc data :data-error (data-error spec data))
          conformed)))))

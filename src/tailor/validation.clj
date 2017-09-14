@@ -21,7 +21,7 @@
     item
     (let [conformed (s/conform spec item)]
       (if (= conformed ::s/invalid)
-        (assoc item :item-error (item-error spec item))
+        (assoc item :data-error (item-error spec item))
         conformed))))
 
 (defn validate

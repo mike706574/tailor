@@ -15,8 +15,7 @@
           [{:number "A",
             :data-errors [{:in :number, :pred "number?", :val "A"}]}],
           :invalid-count 1,
-          :data-errors-count 1,
-          :data-errors-tally {[:number "number?"] 1}}
+          :error-tally {[:number "number?"] 1}}
          (aggregation/aggregate identity [{:number 1}
                                           {:number "A"
                                            :data-errors [{:in :number :pred "number?" :val "A"}]}]))))

@@ -16,8 +16,7 @@
                      :valid-count 0
                      :invalid []
                      :invalid-count 0
-                     :data-errors-count 0
-                     :data-errors-tally {}})
+                     :error-tally {}})
 
 (defn process [result position]
   (if-let [data-errors (:data-errors position)]
@@ -26,8 +25,7 @@
         (update :count inc)
         (update :invalid conj position)
         (update :invalid-count inc)
-        (update :data-errors-count inc)
-        (update :data-errors-tally tally-data-errors data-errors))
+        (update :error-tally tally-data-errors data-errors))
     (-> result
         (update :count inc)
         (update :valid conj position)

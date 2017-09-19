@@ -1,4 +1,4 @@
-(defproject org.clojars.mike706574/tailor "0.0.12"
+(defproject org.clojars.mike706574/tailor "0.0.13-SNAPSHOT"
   :description "Potentially useful string predicates and conformers."
   :url "https://github.com/mike706574/tailor"
   :license {:name "Eclipse Public License"

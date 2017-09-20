@@ -48,4 +48,4 @@
 (def initial-collection (assoc initial-summary :valid [] :invalid []))
 
 (defn collect [xf data]
-  (reduce (xf collect*) initial-collection data))
+  (reduce (xf collect-position) initial-collection data))

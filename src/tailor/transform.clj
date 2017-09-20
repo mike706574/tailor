@@ -43,7 +43,7 @@
     (-> (ack-invalid-position result position)
         (update :invalid conj position))
     (-> (ack-valid-position result position)
-        (update :invalid conj position))))
+        (update :valid conj position))))
 
 (def initial-collection (assoc initial-summary :valid [] :invalid []))
 

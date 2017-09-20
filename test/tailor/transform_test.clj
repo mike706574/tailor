@@ -1,12 +1,12 @@
-(ns tailor.aggregation-test
+(ns tailor.transform-test
   (:refer-clojure :exclude [double?])
   (:require [clojure.test :refer [deftest is testing]]
-            [tailor.aggregation :as aggregation]
+            [tailor.transform :as transform]
             [tailor.parsers :as parsers]
             [tailor.specs :refer :all]
             [tailor.predicates :refer :all]))
 
-(deftest aggregate
+(deftest transform
   (is (= {:valid? false,
           :count 2,
           :valid [{:number 1}],
@@ -16,6 +16,8 @@
             :data-errors [{:in :number, :pred "number?", :val "A"}]}],
           :invalid-count 1,
           :error-tally {[:number "number?"] 1}}
-         (aggregation/aggregate identity [{:number 1}
-                                          {:number "A"
-                                           :data-errors [{:in :number :pred "number?" :val "A"}]}]))))
+         (transform/collect
+          (map identity)
+          [{:number 1}
+           {:number "A"
+            :data-errors [{:in :number :pred "number?" :val "A"}]}]))))

@@ -22,7 +22,6 @@
 ;; java.util.Date
 (defn date?
   ([pattern]
-   (println "PATTERN" pattern)
    (comp boolean (parsers/date pattern)))
   ([pattern x]
    (boolean (parsers/date pattern x))))

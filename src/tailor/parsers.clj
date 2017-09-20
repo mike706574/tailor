@@ -24,8 +24,6 @@
 ;; java.util.Date
 (defn ^:private parse-date
   [formatter x]
-  (println "Parsing date " x "to" (.toPattern formatter))
-
   (cond
     (instance? java.util.Date x) x
     (string? x) (try
@@ -35,10 +33,8 @@
 (defn date
   "Coerces strings to java.util.Date instances using the given pattern. Returns a parser when no value is given."
   ([pattern]
-   (println "Returning fn for " pattern)
    (partial parse-date (java.text.SimpleDateFormat. pattern)))
   ([pattern x]
-   (println "PARSIN" x)
    (parse-date (java.text.SimpleDateFormat. pattern) x)))
 
 (def ^:private basic-iso-date-format (java.text.SimpleDateFormat. "yyyyMMdd"))

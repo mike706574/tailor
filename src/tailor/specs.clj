@@ -25,11 +25,8 @@
 
 (defn to-date
   [pattern]
-  (println "Hello, my pattern is " pattern)
   (let [parse (parsers/date pattern)
-        to-date (fn [x]
-                  (println "FOO" x)
-                  (or (parse x) ::s/invalid))]
+        to-date (fn [x] (or (parse x) ::s/invalid))]
     (s/conformer to-date)))
 
 (let [to-basic-iso-date (fn [x] (or (parsers/basic-iso-date x) ::s/invalid))]

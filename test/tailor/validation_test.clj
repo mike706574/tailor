@@ -9,7 +9,7 @@
 
 (s/def ::id (s/and string? populated? to-trimmed))
 (s/def ::rate (s/and double? to-double))
-(s/def ::date (s/and date? (to-date "yyyyMMdd")))
+(s/def ::date (s/and basic-iso-date? (to-date "yyyyMMdd")))
 
 (s/def ::item (s/keys :req [::id ::rate ::date]))
 
@@ -26,13 +26,13 @@
 (deftest invalid?
   (is (= {:tailor.validation-test/id " ",
           :tailor.validation-test/rate "x",
-          :tailor.validation-test/date "01121995",
+          :tailor.validation-test/date "01x21995",
           :data-errors
-          [{:pred "populated?", :val " ", :in :tailor.validation-test/id}
-           {:pred "double?", :val "x", :in :tailor.validation-test/rate}
-           {:pred "to-date",
-            :val "01121995",
-            :in :tailor.validation-test/date}]}
+          [{:in :tailor.validation-test/id, :pred "populated?", :val " "}
+           {:in :tailor.validation-test/rate, :pred "double?", :val "x"}
+           {:in :tailor.validation-test/date,
+            :pred "basic-iso-date?",
+            :val "01x21995"}]}
          (validation/validate-item ::item {::id " "
                                            ::rate "x"
-                                           ::date "01121995"}))))
+                                           ::date "01x21995"}))))

@@ -1,4 +1,4 @@
-(defproject fun.mike/tailor "0.0.15"
+(defproject fun.mike/tailor "0.0.16-SNAPSHOT"
   :description "A small library for validating and coercing maps of strings via spec."
   :url "https://github.com/mike706574/tailor"
   :license {:name "Eclipse Public License"

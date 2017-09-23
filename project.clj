@@ -1,5 +1,5 @@
-(defproject org.clojars.mike706574/tailor "0.0.15-SNAPSHOT"
-  :description "Potentially useful string predicates and conformers."
+(defproject fun.mike/tailor "0.0.15"
+  :description "A small library for validating and coercing maps of strings via spec."
   :url "https://github.com/mike706574/tailor"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}

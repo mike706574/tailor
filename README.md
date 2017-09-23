@@ -1,6 +1,6 @@
 # tailor
 
-Potentially useful string predicates and conformers.
+A small support library for validating and coercing maps of strings via spec.
 
 
 ## Copyright and License

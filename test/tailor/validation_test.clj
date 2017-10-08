@@ -24,15 +24,19 @@
                                            ::date "19950112"}))))
 
 (deftest invalid?
-  (is (= {:tailor.validation-test/id " "
-          :tailor.validation-test/rate "x"
-          :tailor.validation-test/date "01x21995"
+  (is (= {:tailor.validation-test/id " ",
+          :tailor.validation-test/rate "x",
+          :tailor.validation-test/date "01x21995",
           :data-errors
-          [{:in [:tailor.validation-test/id] :pred "populated?" :val " "}
-           {:in [:tailor.validation-test/rate] :pred "double?" :val "x"}
-           {:in [:tailor.validation-test/date]
-            :pred "basic-iso-date?"
-            :val "01x21995"}]}
+          [{:pred "tailor.predicates/populated?",
+            :val " ",
+            :in [:tailor.validation-test/id]}
+           {:pred "tailor.predicates/double?",
+            :val "x",
+            :in [:tailor.validation-test/rate]}
+           {:pred "tailor.predicates/basic-iso-date?",
+            :val "01x21995",
+            :in [:tailor.validation-test/date]}]}
          (validation/validate-item ::item {::id " "
                                            ::rate "x"
                                            ::date "01x21995"}))))

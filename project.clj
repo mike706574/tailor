@@ -8,5 +8,6 @@
                    :target-path "target/dev"
                    :dependencies [[org.clojure/clojure "1.9.0-alpha20"]
                                   [org.clojure/spec.alpha "0.1.123"]
-                                  [org.clojure/tools.namespace "0.2.11"]]}}
+                                  [org.clojure/tools.namespace "0.2.11"]
+                                  [org.clojure/core.match "0.3.0-alpha5"]]}}
   :repl-options {:init-ns user})

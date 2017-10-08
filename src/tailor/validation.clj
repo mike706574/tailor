@@ -1,35 +1,20 @@
-(ns tailor.validation  (:require [clojure.spec.alpha :as s]))
-
-(defn item-error
-  ([id problem]
-   (assoc (item-error problem) :in id))
-  ([problem]
-   (-> problem
-       (select-keys [:pred :val :in])
-       (update :pred (fn [pred]
-                       (let [sym (if (sequential? pred)
-                                   (last pred)
-                                   pred)]
-                         (name sym)))))))
+(ns tailor.validation
+  (:require [clojure.spec.alpha :as s]))
 
 (defn process-value
   [spec id value]
   (let [conformed (s/conform spec value)]
     (if (= conformed ::s/invalid)
-      {:data-errors (->> (s/explain-data spec value)
-                         (::s/problems)
-                         (map (partial item-error id)))}
-      {:val value})))
+      {:data-errors [{:in id :spec spec :value value}]}
+      {:value value})))
 
 (defn process-entry
   [item [id spec]]
-  (if-not spec
-    item
-    (let [value (get item id)
-          {:keys [val data-errors]} (process-value spec id value)]
-      (if data-errors
-        (update item :data-errors #(into % data-errors))
-        (assoc item id val)))))
+  (let [value (get item id)
+        {:keys [value data-errors]} (process-value spec id value)]
+    (if data-errors
+      (update item :data-errors #(into % data-errors))
+      (assoc item id value))))
 
 (defn validate-item-with-specs
   [specs item]
@@ -42,6 +27,20 @@
    (map (partial validate-item-with-specs specs)))
   ([specs items]
    (map (partial validate-item-with-specs specs) items)))
+
+(defn item-error
+  [problem]
+  (-> problem
+      (select-keys [:pred :val :in])
+      (update :pred (fn [pred]
+                      ;; TODO: Most of the time, this probably won't work very well.
+                      (let [form (if (sequential? pred)
+                                   (last pred)
+                                   pred)]
+                        (cond
+                          (symbol? form) (str form)
+                          (keyword? form) (name form)
+                          :else (str form)))))))
 
 (defn validate-item
   [spec item]

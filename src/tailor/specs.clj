@@ -3,25 +3,32 @@
             [clojure.string :as str]
             [tailor.parsers :as parsers]))
 
-(def to-double
+(defmacro defconformer
+  [sym docstring f]
+  `(def ~sym
+     ~docstring
+     (let [~sym ~f]
+       (s/conformer ~sym))))
+
+(defconformer to-double
   "Conformer for double coercion."
-  (let [to-double (fn [x] (or (parsers/double x) ::s/invalid))]
-    (s/conformer to-double)))
+  (fn [x] (or (parsers/double x) ::s/invalid)))
 
-(def to-long
+(defconformer to-long
   "Conformer for long coercion."
-  (let [to-long (fn [x] (or (parsers/long x) ::s/invalid))]
-    (s/conformer to-long)))
+  (fn [x] (or (parsers/long x) ::s/invalid)))
 
-(def to-value
+(defconformer to-value
   "Conformer for selecting the value from a conformed tuple."
-  (let [to-value (fn [[tag x]] x)]
-    (s/conformer to-value)))
+  (fn [[tag x]] x))
 
-(def to-trimmed
+(defconformer to-trimmed
   "Conformer for trimming a string."
-  (let [to-trimmed str/trim]
-    (s/conformer to-trimmed)))
+  str/trim)
+
+(defconformer blank-to-nil
+  "Conformer for defaulting a blank string to nil."
+  #(when-not (str/blank? %) ::s/invalid))
 
 (defn to-date
   [pattern]

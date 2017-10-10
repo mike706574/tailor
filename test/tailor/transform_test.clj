@@ -13,11 +13,11 @@
           :valid-count 1,
           :invalid
           [{:number "A",
-            :data-errors [{:in :number, :pred "number?", :val "A"}]}],
+            :data-errors [{:key :number, :pred "number?", :val "A"}]}],
           :invalid-count 1,
-          :error-tally {[:number "number?"] 1}}
+          :error-tally #{{:key :number, :pred "number?", :count 1}}}
          (transform/collect
           (map identity)
           [{:number 1}
            {:number "A"
-            :data-errors [{:in :number :pred "number?" :val "A"}]}]))))
+            :data-errors [{:key :number :pred "number?" :val "A"}]}]))))

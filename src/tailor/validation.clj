@@ -1,11 +1,23 @@
 (ns tailor.validation
   (:require [clojure.spec.alpha :as s]))
 
+(defn tag [x]
+  (cond (qualified-ident? x) (str (namespace x) "/" (name x))
+                      (ident? x) (name x)
+                      :else (str x)))
+(defn value-error
+  [id spec value problem]
+  (merge problem {:key id
+                  :tag (tag spec)
+                  :val value}))
+
 (defn process-value
   [spec id value]
   (let [conformed (s/conform spec value)]
     (if (= conformed ::s/invalid)
-      {:data-errors [{:in id :spec spec :value value}]}
+      (let [spec-problems (::s/problems (s/explain-data spec value))
+            data-errors (mapv (partial value-error id spec value) spec-problems)]
+        {:data-errors data-errors})
       {:value value})))
 
 (defn process-entry
@@ -30,17 +42,8 @@
 
 (defn item-error
   [problem]
-  (-> problem
-      (select-keys [:pred :val :in])
-      (update :pred (fn [pred]
-                      ;; TODO: Most of the time, this probably won't work very well.
-                      (let [form (if (sequential? pred)
-                                   (last pred)
-                                   pred)]
-                        (cond
-                          (symbol? form) (str form)
-                          (keyword? form) (name form)
-                          :else (str form)))))))
+  (let [{:keys [in via]} problem]
+    (assoc problem :key (last in) :tag (tag (last via)))))
 
 (defn validate-item
   [spec item]

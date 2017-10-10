@@ -1,14 +1,18 @@
 (ns tailor.transform)
 
-(defn tally-error [tally k]
-  (if (contains? tally k)
-    (update tally k inc)
-    (assoc tally k 1)))
+(defn tally-error [tally {:keys [key pred]}]
+  (letfn [(same-error? [other]
+            (and (= key (:key other) )
+                 (= pred (:pred other))))]
+    (set
+     (if-let [item (first (filter same-error? tally))]
+       (->> tally
+            (remove same-error?)
+            (cons (update item :count inc)))
+       (conj tally {:key key :pred pred :count 1})))))
 
-(defn tally-data-errors [tally data-errors]
-  (->> data-errors
-       (map #(vector (:in %) (:pred %)))
-       (reduce tally-error tally)))
+(defn tally-errors [tally data-errors]
+  (reduce tally-error #{} data-errors))
 
 (def initial-summary {:valid? true
                       :count 0
@@ -28,7 +32,7 @@
       (assoc :valid? false)
       (update :count inc)
       (update :invalid-count inc)
-      (update :error-tally tally-data-errors (:data-errors position))))
+      (update :error-tally tally-errors (:data-errors position))))
 
 (defn summarize-position [result position]
   (if-let [data-errors (:data-errors position)]

@@ -6,7 +6,7 @@
   :min-lein-version "2.0.0"
   :profiles {:dev {:source-paths ["dev"]
                    :target-path "target/dev"
-                   :dependencies [[org.clojure/clojure "1.9.0-alpha20"]
+                   :dependencies [[org.clojure/clojure "1.9.0-beta2"]
                                   [org.clojure/spec.alpha "0.1.123"]
                                   [org.clojure/tools.namespace "0.2.11"]
                                   [org.clojure/core.match "0.3.0-alpha5"]]}}

@@ -28,15 +28,27 @@
           :tailor.validation-test/rate "x",
           :tailor.validation-test/date "01x21995",
           :data-errors
-          [{:pred "tailor.predicates/populated?",
+          [{:path [:tailor.validation-test/id],
+            :pred 'tailor.predicates/populated?,
             :val " ",
-            :in [:tailor.validation-test/id]}
-           {:pred "tailor.predicates/double?",
+            :via [:tailor.validation-test/item :tailor.validation-test/id],
+            :in [:tailor.validation-test/id],
+            :key :tailor.validation-test/id,
+            :tag "tailor.validation-test/id"}
+           {:path [:tailor.validation-test/rate],
+            :pred 'tailor.predicates/double?,
             :val "x",
-            :in [:tailor.validation-test/rate]}
-           {:pred "tailor.predicates/basic-iso-date?",
+            :via [:tailor.validation-test/item :tailor.validation-test/rate],
+            :in [:tailor.validation-test/rate],
+            :key :tailor.validation-test/rate,
+            :tag "tailor.validation-test/rate"}
+           {:path [:tailor.validation-test/date],
+            :pred 'tailor.predicates/basic-iso-date?,
             :val "01x21995",
-            :in [:tailor.validation-test/date]}]}
+            :via [:tailor.validation-test/item :tailor.validation-test/date],
+            :in [:tailor.validation-test/date],
+            :key :tailor.validation-test/date,
+            :tag "tailor.validation-test/date"}]}
          (validation/validate-item ::item {::id " "
                                            ::rate "x"
                                            ::date "01x21995"}))))

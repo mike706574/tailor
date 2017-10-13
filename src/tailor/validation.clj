@@ -4,7 +4,8 @@
 
 (s/def ::id (s/or :keyword keyword?
                   :string (s/and string? (complement str/blank?))))
-(s/def ::spec qualified-keyword?)
+(s/def ::spec (s/or :qualified-keyword qualified-keyword?
+                    :function fn?))
 (s/def ::value-specs (s/map-of ::id ::spec))
 
 (defn ^:private data-errors

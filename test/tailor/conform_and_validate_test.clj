@@ -1,11 +1,15 @@
-(ns tailor.conform-test
+(ns tailor.conform-and-validate-test
   (:refer-clojure :exclude [double?])
   (:require [clojure.spec.alpha :as s]
+            [clojure.spec.gen.alpha :as gen]
+            [clojure.spec.test.alpha :as stest]
             [clojure.test :refer [deftest is testing]]
             [tailor.validation :as validation]
             [tailor.parsers :as parsers]
             [tailor.specs :refer :all]
             [tailor.predicates :refer :all]))
+
+(stest/instrument)
 
 (s/def :domain/id (s/and string? populated? to-trimmed))
 (s/def :domain/category #{"A" "B"})
@@ -27,25 +31,15 @@
 
 (def iso-date (parsers/date "yyyyMMdd"))
 
-(deftest no-specs
-  (is (= [{:domain/id "1"
-           :domain/category "B"
-           :domain/rate "1.0"
-           :domain/date "19950512"}]
-         (validation/conform nil nil [{:domain/id "1"
-                                       :domain/category "B"
-                                       :domain/rate "1.0"
-                                       :domain/date "19950512"}]))))
-
 (deftest conforming-valid-item
   (is (= [{:domain/id "1"
            :domain/category "B"
            :domain/rate 1.0
            :domain/date (iso-date "19950512")}]
-         (validation/conform :domain/item value-specs [{:domain/id "1"
-                                                        :domain/category "B"
-                                                        :domain/rate "1.0"
-                                                        :domain/date "19950512"}]))))
+         (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
+                                                                     :domain/category "B"
+                                                                     :domain/rate "1.0"
+                                                                     :domain/date "19950512"}]))))
 
 (deftest invalid-category
   (is (= [{:domain/id "1"
@@ -58,10 +52,10 @@
                           :in []
                           :via [:domain/category],
                           :key :domain/category}]}]
-         (validation/conform :domain/item value-specs [{:domain/id "1"
-                                                        :domain/category "C"
-                                                        :domain/rate "1.0"
-                                                        :domain/date "19950512"}]))))
+         (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
+                                                                     :domain/category "C"
+                                                                     :domain/rate "1.0"
+                                                                     :domain/date "19950512"}]))))
 
 (deftest invalid-rate
   (is (= [{:domain/id "1",
@@ -70,7 +64,7 @@
            :domain/date (iso-date "19950512")
            :data-errors
            [{:path [],
-             :pred 'tailor.conform-test/valid-rate-for-category?,
+             :pred 'tailor.conform-and-validate-test/valid-rate-for-category?,
              :val #:domain{:id "1",
                            :category "B",
                            :rate 10.0,
@@ -78,7 +72,7 @@
              :via [:domain/item],
              :in [],
              :key nil}]}]
-         (validation/conform :domain/item value-specs [{:domain/id "1"
-                                                        :domain/category "B"
-                                                        :domain/rate "10.0"
-                                                        :domain/date "19950512"}]))))
+         (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
+                                                                     :domain/category "B"
+                                                                     :domain/rate "10.0"
+                                                                     :domain/date "19950512"}]))))

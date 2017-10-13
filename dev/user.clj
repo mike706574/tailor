@@ -44,3 +44,15 @@
   []
   (stop)
   (go))
+
+(comment
+  (s/def ::keyword-or-populated-string?
+    (s/or :keyword keyword?
+          :string (s/and string? (complement str/blank?))))
+
+  (s/def :tailor/spec qualified-ident?)
+  (s/def :tailor/coercion :tailor/spec)
+  (s/def :tailor/values (s/map-of :opt-un [:tailor/spec :tailor/coercion]))
+  (s/def :tailor/schema (s/keys :opt-un [:tailor/validation
+                                         :tailor/coercion
+                                         :tailor/values])))

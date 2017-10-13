@@ -1,5 +1,11 @@
 (ns tailor.validation
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.string :as str]))
+
+(s/def ::id (s/or :keyword keyword?
+                  :string (s/and string? (complement str/blank?))))
+(s/def ::spec qualified-keyword?)
+(s/def ::value-specs (s/map-of ::id ::spec))
 
 (defn ^:private data-errors
   [spec item]
@@ -27,12 +33,18 @@
   [spec item]
   (if (:data-errors item)
     item
-    (let [conformed (s/conform spec item)]
-      (if (= conformed ::s/invalid)
-        (assoc item :data-errors (data-errors spec item))
-        conformed))))
+    (if-let [data-errors (data-errors spec item)]
+      (assoc item :data-errors data-errors)
+      item)))
 
-(defn conform-item
+(defn validate-item
+  [spec item]
+  (if (:data-errors item)
+    item
+    (if-let [data-errors (data-errors spec item)]
+      (assoc item :data-errors data-errors)
+      item)))
+(defn conform-and-validate-item
   [item-spec value-specs item]
   (if (:data-errors item)
     item
@@ -49,8 +61,20 @@
   ([spec items]
    (map (partial validate-item spec) items)))
 
-(defn conform
+(s/fdef validate
+  :args (s/or :xform (s/cat :spec ::spec)
+              :items (s/cat :spec ::spec :items (s/coll-of map?)))
+  :ret (s/or :xform fn?
+             :result (s/coll-of map?)))
+
+(defn conform-and-validate
   ([item-spec value-specs]
-   (map (partial conform-item item-spec value-specs)))
+   (map (partial conform-and-validate-item item-spec value-specs)))
   ([item-spec value-specs items]
-   (map (partial conform-item item-spec value-specs) items)))
+   (map (partial conform-and-validate-item item-spec value-specs) items)))
+
+(s/fdef conform-and-validate
+  :args (s/or :xform (s/cat :item-spec ::spec :value-specs ::value-specs)
+              :items (s/cat :item-spec ::spec :value-specs ::value-specs :items (s/coll-of map?)))
+  :ret (s/or :xform fn?
+             :result (s/coll-of map?)))

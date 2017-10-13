@@ -18,7 +18,7 @@
                       :count 0
                       :valid-count 0
                       :invalid-count 0
-                      :error-tally {}})
+                      :error-tally #{}})
 
 (defn ack-valid-position
   [result position]

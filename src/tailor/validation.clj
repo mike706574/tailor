@@ -12,13 +12,13 @@
   [spec item]
   (when spec
     (when-let [explain-data (s/explain-data spec item)]
-      (mapv #(assoc % :key (last (:in %))) (::s/problems explain-data)))))
+      (::s/problems explain-data))))
 
 (defn ^:private process-value
   [spec id value]
   (let [conformed-value (s/conform spec value)]
     (if (= conformed-value ::s/invalid)
-      (let [data-errors (mapv #(assoc % :key id :val value) (data-errors spec value))]
+      (let [data-errors (mapv #(assoc % :in [id]) (data-errors spec value))]
         {:data-errors data-errors})
       {:value conformed-value})))
 
@@ -32,35 +32,30 @@
 
 (defn validate-item
   [spec item]
-  (if (:data-errors item)
-    item
-    (if-let [data-errors (data-errors spec item)]
-      (assoc item :data-errors data-errors)
-      item)))
+  (if-let [data-errors (data-errors spec item)]
+    (update item :data-errors #(into (vec %) data-errors))
+    item))
 
-(defn validate-item
+(defn validate-item-if-no-errors
   [spec item]
   (if (:data-errors item)
     item
-    (if-let [data-errors (data-errors spec item)]
-      (assoc item :data-errors data-errors)
-      item)))
+    (validate-item spec item)))
+
 (defn conform-and-validate-item
   [item-spec value-specs item]
   (if (:data-errors item)
     item
     (let [conformed-item (reduce process-entry item value-specs)]
-      (if (:data-errors conformed-item)
-        conformed-item
-        (if item-spec
-          (validate-item item-spec conformed-item)
-          conformed-item)))))
+      (if item-spec
+        (validate-item item-spec conformed-item)
+        conformed-item))))
 
 (defn validate
   ([spec]
-   (map (partial validate-item spec)))
+   (map (partial validate-item-if-no-errors spec)))
   ([spec items]
-   (map (partial validate-item spec) items)))
+   (map (partial validate-item-if-no-errors spec) items)))
 
 (s/fdef validate
   :args (s/or :xform (s/cat :spec ::spec)

@@ -9,15 +9,18 @@
 (deftest transform
   (is (= {:valid? false,
           :count 2,
-          :valid [{:number 1}],
           :valid-count 1,
+          :invalid-count 1,
+          :error-tally
+          #{{:in [:number], :pred `string?, :count 1}},
+          :valid [{:number 1}],
           :invalid
           [{:number "A",
-            :data-errors [{:key :number, :pred "number?", :val "A"}]}],
-          :invalid-count 1,
-          :error-tally #{{:key :number, :pred "number?", :count 1}}}
+            :data-errors
+            [{:in [:number], :pred `string?, :val "A"}]}]}
+
          (transform/collect
           (map identity)
           [{:number 1}
            {:number "A"
-            :data-errors [{:key :number :pred "number?" :val "A"}]}]))))
+            :data-errors [{:in [:number] :pred `string? :val "A"}]}]))))

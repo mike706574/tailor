@@ -1,15 +1,15 @@
 (ns tailor.transform)
 
-(defn tally-error [tally {:keys [key pred]}]
+(defn tally-error [tally {:keys [in pred]}]
   (letfn [(same-error? [other]
-            (and (= key (:key other) )
+            (and (= in (:in other) )
                  (= pred (:pred other))))]
     (set
      (if-let [item (first (filter same-error? tally))]
        (->> tally
             (remove same-error?)
             (cons (update item :count inc)))
-       (conj tally {:key key :pred pred :count 1})))))
+       (conj tally {:in in :pred pred :count 1})))))
 
 (defn tally-errors [tally data-errors]
   (reduce tally-error #{} data-errors))

@@ -10,7 +10,8 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [clojure.test :as test]
-   [clojure.tools.namespace.repl :refer [refresh refresh-all]]))
+   [clojure.tools.namespace.repl :refer [refresh refresh-all]]
+   [com.nm.mi.swpi.validation.main :as main]))
 
 (defn init
   "Creates and initializes the system under development in the Var

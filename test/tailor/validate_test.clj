@@ -31,20 +31,17 @@
               :pred `(complement str/blank?)
               :val " ",
               :via [:tailor.validate-test/item :tailor.validate-test/id],
-              :in [:tailor.validate-test/id],
-              :key :tailor.validate-test/id}
+              :in [:tailor.validate-test/id]}
              {:path [:tailor.validate-test/rate],
               :pred `double?,
               :val "x",
               :via [:tailor.validate-test/item :tailor.validate-test/rate],
-              :in [:tailor.validate-test/rate],
-              :key :tailor.validate-test/rate}
+              :in [:tailor.validate-test/rate]}
              {:path [:tailor.validate-test/date],
               :pred `inst?,
               :val "01x21995",
               :via [:tailor.validate-test/item :tailor.validate-test/date],
-              :in [:tailor.validate-test/date],
-              :key :tailor.validate-test/date}]}]
+              :in [:tailor.validate-test/date]}]}]
          (validation/validate ::item [{::id " "
                                        ::rate "x"
                                        ::date "01x21995"}]))))

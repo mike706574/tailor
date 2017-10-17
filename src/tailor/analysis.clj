@@ -1,4 +1,4 @@
-(ns tailor.transform)
+(ns tailor.analysis)
 
 (defn tally-error [tally {:keys [in pred]}]
   (letfn [(same-error? [other]
@@ -20,36 +20,41 @@
                       :invalid-count 0
                       :error-tally #{}})
 
-(defn ack-valid-position
-  [result position]
+(defn ack-valid-item
+  [result item]
   (-> result
       (update :count inc)
       (update :valid-count inc)))
 
-(defn ack-invalid-position
-  [result position]
+(defn ack-invalid-item
+  [result item]
   (-> result
       (assoc :valid? false)
       (update :count inc)
       (update :invalid-count inc)
-      (update :error-tally tally-errors (:data-errors position))))
+      (update :error-tally tally-errors (:data-errors item))))
 
-(defn summarize-position [result position]
-  (if-let [data-errors (:data-errors position)]
-    (ack-invalid-position result position)
-    (ack-valid-position result position)))
+(defn summarize-item [result item]
+  (if-let [data-errors (:data-errors item)]
+    (ack-invalid-item result item)
+    (ack-valid-item result item)))
 
 (defn summarize [xf data]
-  (reduce (xf summarize-position) initial-summary data))
+  (reduce (xf summarize-item) initial-summary data))
 
-(defn collect-position [result position]
-  (if-let [data-errors (:data-errors position)]
-    (-> (ack-invalid-position result position)
-        (update :invalid conj position))
-    (-> (ack-valid-position result position)
-        (update :valid conj position))))
+(defn collect-item
+  ([result] result)
+  ([result item]
+   (if-let [data-errors (:data-errors item)]
+     (-> (ack-invalid-item result item)
+         (update :invalid conj item))
+     (-> (ack-valid-item result item)
+         (update :valid conj item)))))
 
 (def initial-collection (assoc initial-summary :valid [] :invalid []))
 
-(defn collect [xf data]
-  (reduce (xf collect-position) initial-collection data))
+(defn categorize-and-tally
+  ([data]
+   (reduce collect-item initial-collection data))
+  ([xf data]
+   (transduce xf collect-item initial-collection data)))

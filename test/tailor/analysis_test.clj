@@ -1,7 +1,7 @@
-(ns tailor.transform-test
+(ns tailor.analysis-test
   (:refer-clojure :exclude [double?])
   (:require [clojure.test :refer [deftest is testing]]
-            [tailor.transform :as transform]
+            [tailor.analysis :as analysis]
             [tailor.parsers :as parsers]
             [tailor.specs :refer :all]
             [tailor.predicates :refer :all]))
@@ -19,7 +19,7 @@
             :data-errors
             [{:in [:number], :pred `string?, :val "A"}]}]}
 
-         (transform/collect
+         (analysis/categorize-and-tally
           (map identity)
           [{:number 1}
            {:number "A"

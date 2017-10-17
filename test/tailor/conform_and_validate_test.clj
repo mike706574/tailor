@@ -52,18 +52,16 @@
              :pred '(clojure.spec.alpha/conformer tailor.specs/to-double),
              :val "1.X0",
              :via [:tailor/to-double],
-             :in [],
-             :key :domain/rate}
+             :in [:domain/rate]}
             {:path [:domain/rate],
              :pred 'clojure.core/double?,
              :val "1.X0",
              :via [:domain/item :domain/rate],
-             :in [:domain/rate],
-             :key :domain/rate}]}]
-         (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
-                                                                     :domain/category "B"
-                                                                     :domain/rate "1.X0"
-                                                                     :domain/date "19950512"}]))))
+             :in [:domain/rate]}]}
+          (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
+                                                                      :domain/category "B"
+                                                                      :domain/rate "1.X0"
+                                                                      :domain/date "19950512"}])])))
 
 (deftest invalid-category
   (is (= [{:domain/id "1",
@@ -75,8 +73,7 @@
              :pred #{"B" "A"},
              :val "C",
              :via [:domain/item :domain/category],
-             :in [:domain/category],
-             :key :domain/category}]}]
+             :in [:domain/category]}]}]
          (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
                                                                      :domain/category "C"
                                                                      :domain/rate "1.0"
@@ -95,8 +92,7 @@
                            :rate 10.0,
                            :date (iso-date "19950512")},
              :via [:domain/item],
-             :in [],
-             :key nil}]}]
+             :in []}]}]
          (validation/conform-and-validate :domain/item value-specs [{:domain/id "1"
                                                                      :domain/category "B"
                                                                      :domain/rate "10.0"

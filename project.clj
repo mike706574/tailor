@@ -1,4 +1,4 @@
-(defproject fun.mike/tailor "0.0.22"
+(defproject fun.mike/tailor "0.0.23-SNAPSHOT"
   :description "String predicates and conformers."
   :url "https://github.com/mike706574/tailor"
   :license {:name "Eclipse Public License"

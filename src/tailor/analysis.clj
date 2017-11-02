@@ -12,7 +12,7 @@
        (conj tally {:in in :pred pred :count 1})))))
 
 (defn tally-errors [tally data-errors]
-  (reduce tally-error #{} data-errors))
+  (reduce tally-error tally data-errors))
 
 (def initial-summary {:valid? true
                       :count 0

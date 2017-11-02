@@ -30,11 +30,19 @@
       (update item :data-errors #(into % data-errors))
       (assoc item id value))))
 
+(defn keep-data-error? [error-paths data-error]
+  (not (contains? error-paths (:in data-error))))
+
+(defn add-spec-errors [new-data-errors existing-data-errors]
+  (let [error-paths (set (map :in existing-data-errors))]
+    (into (vec existing-data-errors) (filter #(not (contains? error-paths (:in %))) new-data-errors))))
+
 (defn validate-item
   [spec item]
-  (if-let [data-errors (data-errors spec item)]
-    (update item :data-errors #(into (vec %) data-errors))
-    item))
+  (let [existing-data-errors (:data-errors item)]
+    (if-let [data-errors (data-errors spec item)]
+      (update item :data-errors (partial add-spec-errors data-errors))
+      item)))
 
 (defn validate-item-if-no-errors
   [spec item]

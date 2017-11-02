@@ -1,5 +1,5 @@
 (defproject fun.mike/tailor "0.0.22-SNAPSHOT"
-  :description "A small library for validating and coercing maps of strings via spec."
+  :description "String predicates and conformers."
   :url "https://github.com/mike706574/tailor"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}

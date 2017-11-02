@@ -1,6 +1,6 @@
 # tailor
 
-A small support library for validating and coercing maps of strings via spec.
+String predicates and conformers.
 
 
 ## Copyright and License
